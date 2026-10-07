@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reports | Budget Tracker</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+background:#f4f6f9;
+}
+
+/* HEADER */
+
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 60px;
+background:#1e2a38;
+color:white;
+}
+
+.logo{
+font-size:24px;
+font-weight:bold;
+}
+
+nav a{
+color:white;
+text-decoration:none;
+margin-left:20px;
+}
+
+nav a:hover{
+color:#00d4ff;
+}
+
+/* SECTION */
+
+section{
+width:80%;
+max-width:900px;
+margin:40px auto;
+background:white;
+padding:25px;
+border-radius:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* FILTER */
+
+.filter{
+text-align:center;
+}
+
+.filter select{
+padding:10px;
+margin-top:10px;
+}
+
+/* SUMMARY */
+
+.summary{
+display:flex;
+justify-content:space-around;
+flex-wrap:wrap;
+gap:20px;
+text-align:center;
+}
+
+.card{
+background:#1abc9c;
+color:white;
+padding:20px;
+border-radius:8px;
+width:200px;
+}
+
+/* PIE CHART */
+
+.chart{
+text-align:center;
+}
+
+/* BUDGET */
+
+.budget{
+text-align:center;
+}
+
+.budget input{
+padding:10px;
+margin-top:10px;
+}
+
+.budget button{
+padding:10px 20px;
+margin-top:10px;
+background:#1abc9c;
+border:none;
+color:white;
+border-radius:5px;
+cursor:pointer;
+}
+
+/* AI SECTION */
+
+.ai{
+background:#eef2f7;
+}
+
+.ai p{
+margin-top:10px;
+font-size:16px;
+}
+
+/* FOOTER */
+
+footer{
+background:#1e2a38;
+color:white;
+text-align:center;
+padding:15px;
+margin-top:40px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<header>
+
+<div class="logo">💰 Budget Tracker</div>
+
+<nav>
+<a href="budget.html">Home</a>
+<a href="expense.html">Add Expense</a>
+<a href="reports.html">Reports</a>
+<a href="adviser.html">Budget planner</a>
+<a href="lock.html">Log in</a>
+
+
+</nav>
+
+</header>
+
+<!-- MONTHLY FILTER -->
+
+<section class="filter">
+
+<h2>Monthly Filter</h2>
+
+<select id="monthFilter" onchange="loadData()">
+
+<option value="all">All Months</option>
+<option value="0">January</option>
+<option value="1">February</option>
+<option value="2">March</option>
+<option value="3">April</option>
+<option value="4">May</option>
+<option value="5">June</option>
+<option value="6">July</option>
+<option value="7">August</option>
+<option value="8">September</option>
+<option value="9">October</option>
+<option value="10">November</option>
+<option value="11">December</option>
+
+</select>
+
+</section>
+
+<!-- EXPENSE SUMMARY -->
+
+<section>
+
+<h2>Expense Summary</h2>
+
+<div class="summary">
+
+<div class="card">
+<h3>Total Expenses</h3>
+<p>₹ <span id="totalExpense">0</span></p>
+</div>
+
+<div class="card">
+<h3>Total Transactions</h3>
+<p id="totalTransactions">0</p>
+</div>
+
+</div>
+
+</section>
+
+<!-- PIE CHART -->
+
+<section class="chart">
+
+<h2>Expense Distribution</h2>
+
+<canvas id="expenseChart"></canvas>
+
+</section>
+
+<!-- BUDGET VS SPENDING -->
+
+<section class="budget">
+
+<h2>Budget vs Spending</h2>
+
+<input type="number" id="budgetInput" placeholder="Enter Monthly Budget">
+
+<br>
+
+<button onclick="compareBudget()">Check Budget</button>
+
+<p id="budgetResult"></p>
+
+</section>
+
+<!-- AI SUGGESTIONS -->
+
+<section class="ai">
+
+<h2>AI Smart Suggestions</h2>
+
+<p id="aiAdvice">Add expenses to receive financial insights.</p>
+
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+
+<p>© 2026 Smart Budget & Expense Tracker</p>
+
+</footer>
+
+<script>
+
+let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+let chart;
+
+function loadData(){
+
+let month = document.getElementById("monthFilter").value;
+
+let filtered = expenses;
+
+if(month !== "all"){
+filtered = expenses.filter(e=>{
+let d = new Date(e.date);
+return d.getMonth() == month;
+});
+}
+
+let total = 0;
+let categories = {};
+
+filtered.forEach(e=>{
+total += Number(e.amount);
+
+categories[e.category] = (categories[e.category] || 0) + Number(e.amount);
+});
+
+document.getElementById("totalExpense").innerText = total;
+document.getElementById("totalTransactions").innerText = filtered.length;
+
+drawChart(categories);
+generateAIAdvice(total,categories);
+
+}
+
+function drawChart(data){
+
+let ctx = document.getElementById("expenseChart");
+
+if(chart) chart.destroy();
+
+chart = new Chart(ctx,{
+type:'pie',
+data:{
+labels:Object.keys(data),
+datasets:[{
+data:Object.values(data),
+backgroundColor:[
+"#1abc9c",
+"#3498db",
+"#f39c12",
+"#e74c3c",
+"#9b59b6"
+]
+}]
+}
+});
+
+}
+
+function compareBudget(){
+
+let budget = Number(document.getElementById("budgetInput").value);
+let spending = Number(document.getElementById("totalExpense").innerText);
+
+let result = document.getElementById("budgetResult");
+
+if(budget === 0){
+result.innerText="Please enter a budget amount.";
+return;
+}
+
+if(spending > budget){
+result.innerText="⚠ You exceeded your budget!";
+}
+else{
+result.innerText="✅ Good job! You are within your budget.";
+}
+
+}
+
+function generateAIAdvice(total,categories){
+
+let advice = document.getElementById("aiAdvice");
+
+if(total === 0){
+advice.innerText="Add expenses to receive smart financial insights.";
+return;
+}
+
+let highestCategory="";
+let highestAmount=0;
+
+for(let cat in categories){
+if(categories[cat] > highestAmount){
+highestAmount = categories[cat];
+highestCategory = cat;
+}
+}
+
+if(total > 15000){
+advice.innerText="⚠ High spending detected this month. Most of your money is spent on "+highestCategory+". Consider reducing it.";
+}
+else if(total > 8000){
+advice.innerText="Moderate spending observed. Try limiting expenses in "+highestCategory+" category.";
+}
+else{
+advice.innerText="✅ Great financial discipline! Your spending is under control.";
+}
+
+}
+
+loadData();
+
+</script>
+
+</body>
+</html>

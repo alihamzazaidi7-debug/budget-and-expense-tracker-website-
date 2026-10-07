@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Budget Advisor</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+background:#f4f6f9;
+}
+
+/* HEADER */
+
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 60px;
+background:#1e2a38;
+color:white;
+}
+
+.logo{
+font-size:24px;
+font-weight:bold;
+}
+
+nav a{
+color:white;
+text-decoration:none;
+margin-left:20px;
+}
+
+nav a:hover{
+color:#00d4ff;
+}
+
+/* SECTION */
+
+section{
+width:80%;
+max-width:900px;
+margin:40px auto;
+background:white;
+padding:25px;
+border-radius:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+text-align:center;
+}
+
+section img{
+width:80px;
+margin:10px auto;
+display:block;
+}
+
+h2{
+margin-bottom:10px;
+}
+
+/* AI BOX */
+
+.ai-box{
+background:#eef2f7;
+padding:15px;
+border-radius:8px;
+margin-top:10px;
+}
+
+/* FOOTER */
+
+footer{
+background:#1e2a38;
+color:white;
+text-align:center;
+padding:15px;
+margin-top:40px;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<header>
+
+<div class="logo">💰 Budget Tracker</div>
+
+<nav>
+<a href="budget.html">Home</a>
+<a href="expense.html">Add Expense</a>
+<a href="report.html">Reports</a>
+<a href="Adviser.html">Budget planner</a>
+<a href="lock.html">Login</a>
+
+</nav>
+
+</header>
+
+<!-- AI FINANCIAL ANALYSIS -->
+
+<section>
+
+<h2>AI Financial Analysis</h2>
+
+<img src="https://cdn-icons-png.flaticon.com/512/4712/4712027.png">
+
+<div class="ai-box" id="analysis">
+Analyzing your financial behavior...
+</div>
+
+</section>
+
+<!-- MONTHLY SPENDING INSIGHTS -->
+
+<section>
+
+<h2>Monthly Spending Insights</h2>
+
+<img src="https://cdn-icons-png.flaticon.com/512/3135/3135706.png">
+
+<div class="ai-box" id="insights">
+Calculating insights...
+</div>
+
+</section>
+
+<!-- FUTURE EXPENSE PREDICTION -->
+
+<section>
+
+<h2>Future Expense Prediction</h2>
+
+<img src="https://cdn-icons-png.flaticon.com/512/2784/2784459.png">
+
+<div class="ai-box" id="prediction">
+Predicting next month expenses...
+</div>
+
+</section>
+
+<!-- SMART SAVING RECOMMENDATIONS -->
+
+<section>
+
+<h2>Smart Saving Recommendations</h2>
+
+<img src="https://cdn-icons-png.flaticon.com/512/2331/2331941.png">
+
+<div class="ai-box" id="tips">
+Generating saving tips...
+</div>
+
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+
+<p>© 2026 Smart Budget & Expense Tracker</p>
+
+</footer>
+
+<script>
+
+let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+
+function runAI(){
+
+if(expenses.length === 0){
+
+document.getElementById("analysis").innerText="Add some expenses to generate financial analysis.";
+document.getElementById("insights").innerText="No spending data available.";
+document.getElementById("prediction").innerText="Prediction unavailable.";
+document.getElementById("tips").innerText="Start tracking expenses to receive saving tips.";
+
+return;
+
+}
+
+let total = 0;
+let categories = {};
+
+expenses.forEach(e=>{
+
+total += Number(e.amount);
+
+categories[e.category] = (categories[e.category] || 0) + Number(e.amount);
+
+});
+
+let highestCategory="";
+let highestAmount=0;
+
+for(let cat in categories){
+
+if(categories[cat] > highestAmount){
+
+highestAmount = categories[cat];
+highestCategory = cat;
+
+}
+
+}
+
+/* FINANCIAL ANALYSIS */
+
+document.getElementById("analysis").innerText =
+"Your total recorded spending is ₹"+total+
+". Your highest spending category is '"+highestCategory+
+"'. Monitoring this category can improve your financial control.";
+
+/* INSIGHTS */
+
+if(total > 15000){
+
+document.getElementById("insights").innerText =
+"You are spending heavily this month. Consider reducing unnecessary expenses.";
+
+}
+
+else if(total > 8000){
+
+document.getElementById("insights").innerText =
+"Your spending is moderate. Setting weekly limits may help increase savings.";
+
+}
+
+else{
+
+document.getElementById("insights").innerText =
+"Great financial discipline! Your spending is well controlled.";
+
+}
+
+/* FUTURE PREDICTION */
+
+let predicted = Math.round(total * 1.1);
+
+document.getElementById("prediction").innerText =
+"Based on your current spending pattern, your estimated spending next month may be around ₹"+predicted+".";
+
+/* SAVING TIPS */
+
+document.getElementById("tips").innerText =
+"Try reducing expenses in '"+highestCategory+
+"' category. Setting a fixed monthly budget and tracking daily expenses can improve your savings.";
+
+}
+
+runAI();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | Budget Tracker</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(120deg,#1abc9c,#3498db);
+}
+
+/* LOGIN CARD */
+
+.login-container{
+background:white;
+width:380px;
+padding:30px;
+border-radius:10px;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+text-align:center;
+}
+
+/* IMAGE */
+
+.login-container img{
+width:120px;
+margin-bottom:10px;
+}
+
+/* TITLE */
+
+.login-container h2{
+margin-bottom:20px;
+}
+
+/* INPUTS */
+
+.input-group{
+margin-bottom:15px;
+text-align:left;
+}
+
+.input-group label{
+font-size:14px;
+}
+
+.input-group input{
+width:100%;
+padding:10px;
+margin-top:5px;
+border:1px solid #ccc;
+border-radius:5px;
+}
+
+/* OPTIONS */
+
+.options{
+display:flex;
+justify-content:space-between;
+font-size:13px;
+margin-bottom:15px;
+}
+
+/* BUTTON */
+
+button{
+width:100%;
+padding:12px;
+background:#1abc9c;
+border:none;
+color:white;
+font-size:16px;
+border-radius:5px;
+cursor:pointer;
+}
+
+button:hover{
+background:#16a085;
+}
+
+/* SIGNUP LINK */
+
+.signup{
+margin-top:15px;
+font-size:14px;
+}
+
+.signup a{
+text-decoration:none;
+color:#3498db;
+}
+
+footer{
+margin-top:15px;
+font-size:12px;
+color:#888;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="login-container">
+
+<img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png">
+
+<h2>Login to Budget Tracker</h2>
+
+<form onsubmit="loginUser(event)">
+
+<div class="input-group">
+<label>Email</label>
+<input type="email" id="email" required>
+</div>
+
+<div class="input-group">
+<label>Password</label>
+<input type="password" id="password" required>
+</div>
+
+<div class="options">
+<label><input type="checkbox"> Remember me</label>
+<a href="#">Forgot password?</a>
+</div>
+
+<button type="submit">Login</button>
+
+</form>
+
+<div class="signup">
+Don't have an account? <a href="#">Sign Up</a>
+</div>
+
+<footer>
+© 2026 Smart Budget Tracker
+</footer>
+
+</div>
+
+<script>
+
+function loginUser(event){
+
+event.preventDefault();
+
+let email=document.getElementById("email").value;
+let password=document.getElementById("password").value;
+
+/* Simple demo login */
+
+if(email==="admin@gmail.com" && password==="1234"){
+
+alert("Login Successful!");
+window.location.href="index.html";
+
+}
+else{
+
+alert("Invalid Email or Password");
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
